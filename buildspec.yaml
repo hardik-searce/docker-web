@@ -12,7 +12,7 @@ phases:
       - REGION=$AWS_DEFAULT_REGION
       - echo $AWS_DEFAULT_REGION
       - $(aws ecr get-login --region $REGION --no-include-email)
-      - REPOSITORY_URI=$AWS_ID.dkr.ecr.$REGION.amazonaws.com/devopsawsbuild
+      - REPOSITORY_URI=$AWS_ID.dkr.ecr.$REGION.amazonaws.com/devopsaws-demo-harshit
   build:
     commands:
       - echo Building the Docker image...
