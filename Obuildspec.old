@@ -1,0 +1,27 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      docker: 18
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - AWS_ID=$(aws sts get-caller-identity --query Account --output text)
+      - REGION=$AWS_DEFAULT_REGION
+      - echo $AWS_DEFAULT_REGION
+      - $(aws ecr get-login --region $REGION --no-include-email)
+      - REPOSITORY_URI=$AWS_ID.dkr.ecr.$REGION.amazonaws.com/devopsaws-demo-harshit
+  build:
+    commands:
+      - echo Building the Docker image...
+      - docker build -f Dockerfile -t $REPOSITORY_URI -t $REPOSITORY_URI:latest .
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push $REPOSITORY_URI
+      - printf '[{"name":"awsdevops","imageUri":"%s"}]' $REPOSITORY_URI > imagedefinitions.json
+artifacts:
+    files: imagedefinitions.json
