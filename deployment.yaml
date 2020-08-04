@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: apache
-        image: 893888610985.dkr.ecr.ap-southeast-1.amazonaws.com/apache:latest
+        image: $ACCOUNT_ID.dkr.ecr.ap-southeast-1.amazonaws.com/apache:latest
         ports:
         - containerPort: 80
