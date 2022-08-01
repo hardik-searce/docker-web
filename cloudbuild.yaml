@@ -58,8 +58,8 @@ steps:
 # options:
 #   substitutionOption: ALLOW_LOOSE
 substitutions:
-  PROJECT_ID: firm-star-273815
-  COMMIT_SHA: v1
+  _PROJECT_ID: firm-star-273815
+  _COMMIT_SHA: v1
   # _GKE_CLUSTER: hardik-anthos-gke
   # _GKE_LOCATION: us-east4-c
   # _NAMESPACE: default
