@@ -1,0 +1,77 @@
+steps:
+ # Build the container image
+ - name: 'gcr.io/cloud-builders/docker'
+   args: ['build', '-t', 'gcr.io/$PROJECT_ID/hardik-demo:$COMMIT_SHA', '.']
+ # Push the container image to Container Registry
+ - name: 'gcr.io/cloud-builders/docker'
+   args: ['push', 'gcr.io/$PROJECT_ID/hardik-demo:$COMMIT_SHA']
+ # Deploy container image to Cloud Run
+ - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+   entrypoint: gcloud
+   args:
+   - 'run'
+   - 'deploy'
+   - 'hardik-demo'
+   - '--image'
+   - 'gcr.io/$PROJECT_ID/hardik-demo:$COMMIT_SHA'
+   - '--region'
+   - 'us-east4'
+   - '--platform'
+   - 'managed'
+   - '--port'
+   - '80'
+   - '--allow-unauthenticated'
+   - '--tag'
+   - 'green'
+ # Updating traffic policy
+#  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+#    entrypoint: gcloud
+#    args:
+#    - 'run'
+#    - 'services'
+#    - 'update-traffic'
+#    - 'hardik-demo'
+#    - '--region'
+#    - 'us-east4'
+#    - '--to-tags'
+#    - 'green=50'
+#    - '--platform'
+#    - 'managed'
+#    - '--project'
+#    - 'firm-star-273815'
+#  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+#    args:
+#       - run
+#       - services
+#       - update
+#       - $_SERVICE_NAME
+#       - '--platform=gke'
+#       - '--image=gcr.io/$PROJECT_ID/hardik-demo:$COMMIT_SHA'
+#       - >-
+#         --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,$_LABELS
+#       - '--cluster=$_GKE_CLUSTER'
+#       - '--cluster-location=$_GKE_LOCATION'
+#       - '--namespace=$_NAMESPACE'
+#       - '--quiet'
+#    id: Deploy
+#    entrypoint: gcloud
+# options:
+#   substitutionOption: ALLOW_LOOSE
+substitutions:
+  PROJECT_ID: firm-star-273815
+  COMMIT_SHA: v1
+  # _GKE_CLUSTER: hardik-anthos-gke
+  # _GKE_LOCATION: us-east4-c
+  # _NAMESPACE: default
+  # _PLATFORM: gke
+  # _SERVICE_NAME: ytest
+  # _GCR_HOSTNAME: us.gcr.io
+  # _LABELS: gcb-trigger-id=ca7a261d-8eaf-4226-936b-22573bb657ed
+  # _TRIGGER_ID: ca7a261d-8eaf-4226-936b-22573bb657ed
+tags:
+  - gcp-cloud-build-deploy-cloud-run
+  - gcp-cloud-build-deploy-cloud-run-gke
+  - ytest
+# logsBucket: 'gs://hardik-awm-log-sink'
+images:
+ - 'gcr.io/$PROJECT_ID/hardik-demo:$COMMIT_SHA'
